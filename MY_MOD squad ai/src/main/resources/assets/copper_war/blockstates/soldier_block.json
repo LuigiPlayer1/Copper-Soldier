@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "copper_war:block/soldier_block"
+    }
+  }
+}
