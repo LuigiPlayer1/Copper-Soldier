@@ -129,6 +129,31 @@ public class SoldierEntity extends Animal implements RangedAttackMob {
         return false;
     }
 
+    private int countNearbySoldiers(double radius) {
+        List<SoldierEntity> nearby = this.level().getEntitiesOfClass(
+                SoldierEntity.class,
+                this.getBoundingBox().inflate(radius)
+        );
+
+        return nearby.size();
+    }
+
+    @Nullable
+    private Player getVisiblePlayer(double range) {
+        List<Player> players = this.level().getEntitiesOfClass(
+                Player.class,
+                this.getBoundingBox().inflate(range)
+        );
+
+        for (Player player : players) {
+            if (this.hasLineOfSight(player)) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
     public boolean canThrowPotion(double forwardDistance, double upDistance) {
 
         Vec3 eye = this.getEyePosition();
@@ -179,7 +204,7 @@ public class SoldierEntity extends Animal implements RangedAttackMob {
         // Find nearby soldiers in 8 block radius
         List<SoldierEntity> squad = this.level().getEntitiesOfClass(
                 SoldierEntity.class,
-                this.getBoundingBox().inflate(8.0D),
+                this.getBoundingBox().inflate(30.0D),
                 s -> s.getTarget() == target && s.getSquadRole() == SoldierRole.NONE
         );
 
@@ -288,6 +313,26 @@ public class SoldierEntity extends Animal implements RangedAttackMob {
     @Override
     public void tick() {
         super.tick();
+
+        if (!this.level().isClientSide()) {
+
+            Player visiblePlayer = getVisiblePlayer(15.0D);
+
+            if (visiblePlayer != null) {
+
+                int nearbySoldiers = countNearbySoldiers(24.0D);
+
+                // Only aggro if enough soldiers nearby
+                if (nearbySoldiers >= 4 && this.getTarget() == null) {
+
+                    this.setTarget(visiblePlayer);
+                    this.enterCombatMode();
+
+                    // Optional: alert the squad
+                    alertNearbySoldiers(visiblePlayer);
+                }
+            }
+        }
 
         if (this.level().isClientSide()) {
             updateAnimations();

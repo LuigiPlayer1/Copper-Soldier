@@ -207,11 +207,9 @@ public class SoldierAttackGoal extends RangedAttackGoal {
 
                         ticktimeflankwait--;
                         if(ticktimeflankwait > 0){
-                            System.out.println("wait");
                             bulletcountwaitflank--;
                             if(attackflank > 5 && soldier.hasLineOfSight(target) && timetoattackflank <= 0 && bulletcountflank > 0 && bulletcountwaitflank <= 0){
                                 soldier.performRangedAttack(target,1.0f);
-                                System.out.println("fire");
                                 attackflank = 0;
                                 bulletcountflank--;
                             }else if(timetoattackflank <= 0){
@@ -311,7 +309,6 @@ public class SoldierAttackGoal extends RangedAttackGoal {
                     bulletcountwaitsup--;
                     if(attacksup > 5 && soldier.hasLineOfSight(target) && timetoattacksup <= 0 && bulletcountsup > 0 && bulletcountwaitsup <= 0){
                         soldier.performRangedAttack(target,1.0f);
-                        System.out.println("fire");
                         attacksup = 0;
                         bulletcountsup--;
                     }else if(timetoattacksup <= 0){
