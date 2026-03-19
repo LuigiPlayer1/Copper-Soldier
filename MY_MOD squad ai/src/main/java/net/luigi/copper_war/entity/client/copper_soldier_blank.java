@@ -95,7 +95,7 @@ public class copper_soldier_blank<T extends Entity> extends HierarchicalModel<T>
 
 
         if (((SoldierEntity) entity).isAttacking()) {
-            this.animate(((SoldierEntity) entity).attackAnimationState, ModAnimationDefinitions.animationwalking_to_aim, ageInTicks, 1f);
+            this.animate(((SoldierEntity) entity).attackAnimationState, ModAnimationDefinitions.automaticfire, ageInTicks, 1f);
         }
         if (((SoldierEntity) entity).getPose() == Pose.STANDING && ((SoldierEntity) entity).isAttackingvision()) {
             this.animate(((SoldierEntity) entity).attackAnimationStateloop, ModAnimationDefinitions.holdingfire, ageInTicks, 1f);

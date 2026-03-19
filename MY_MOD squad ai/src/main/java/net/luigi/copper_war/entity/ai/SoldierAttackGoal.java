@@ -145,10 +145,20 @@ public class SoldierAttackGoal extends RangedAttackGoal {
                         bulletcountwait--;
                         soldier.getNavigation().stop();
                         if(attackleader > 5 && soldier.hasLineOfSight(target) && timetoattack <= 0 && bulletcount > 0 && bulletcountwait <= 0){
-                            soldier.performRangedAttack(target,1.0f);
-                            //System.out.println("fire");
-                            attackleader = 0;
-                            bulletcount--;
+                            soldier.setAttacking(true);
+                            if(soldier.attackTickCounter == 15){
+
+                                soldier.performRangedAttack(target,1.0f);
+                                //System.out.println("fire");
+                                attackleader = 0;
+                                bulletcount--;
+                            }else if(bulletcount <= 3){
+                                soldier.performRangedAttack(target,1.0f);
+                                //System.out.println("fire");
+                                attackleader = 0;
+                                bulletcount--;
+                            }
+
                         }else if(timetoattack <= 0){
                             attackleader++;
                         }
@@ -156,12 +166,14 @@ public class SoldierAttackGoal extends RangedAttackGoal {
                     }else if(distanceSq <= 2 * 2 && soldier.hasLineOfSight(target)){
                         ticktimeleaderwait = (int)(Math.random() * (maxwait - minwait + 1)) + minwait;
                         ticktimeleader = 0;
+                        soldier.setAttacking(false);
                     }else if(distanceSq <= 3 * 3 && !soldier.hasLineOfSight(target)){
                         soldier.getNavigation().moveTo(target, moveSpeed);
+                        soldier.setAttacking(false);
+                    }else{
+                        soldier.setAttacking(false);
                     }
-//                }else{
-//                    soldier.getNavigation().moveTo(target, moveSpeed);
-//                }
+//
                 break;
             case FLANKER:
                 if (distanceSq > 10 * 10 && ticktimeflank <= 0) {
